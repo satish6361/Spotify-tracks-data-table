@@ -1,0 +1,308 @@
+:root {
+  color: #172026;
+  background: #f4f7f8;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  min-height: 34px;
+  border: 1px solid #b8c5c8;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #172026;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: #356d73;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+input,
+select {
+  min-height: 34px;
+  border: 1px solid #b8c5c8;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #172026;
+  padding: 0 10px;
+}
+
+select[multiple] {
+  min-height: 84px;
+  padding: 6px;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 22px;
+}
+
+.toolbar,
+.bulk-bar,
+.pagination,
+.table-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toolbar {
+  margin-bottom: 16px;
+}
+
+.toolbar h1 {
+  margin: 2px 0 0;
+  font-size: 28px;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #526368;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.toolbar-actions,
+.row-actions,
+.range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active-pill {
+  border-radius: 999px;
+  background: #dcefeb;
+  color: #23575b;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 10px;
+}
+
+.control-bar,
+.bulk-bar,
+.column-panel,
+.table-wrap,
+.pagination {
+  border: 1px solid #cfdbdd;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.control-bar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.4fr) repeat(6, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 14px;
+}
+
+label {
+  display: grid;
+  gap: 5px;
+  color: #435157;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.search-field input {
+  min-width: 220px;
+}
+
+.range-inputs input {
+  width: 100%;
+  min-width: 70px;
+}
+
+.bulk-bar,
+.pagination {
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+}
+
+.column-panel {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+}
+
+.column-panel summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.column-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 8px;
+  padding-top: 10px;
+}
+
+.column-option {
+  display: grid;
+  grid-template-columns: 1fr 82px 36px 36px;
+  align-items: center;
+  gap: 8px;
+}
+
+.column-option label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.table-wrap {
+  overflow: hidden;
+}
+
+.table-meta {
+  min-height: 44px;
+  border-bottom: 1px solid #cfdbdd;
+  color: #526368;
+  padding: 0 14px;
+}
+
+.table-scroll {
+  position: relative;
+  height: min(64vh, 680px);
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #edf3f4;
+}
+
+th,
+td {
+  height: 54px;
+  border-bottom: 1px solid #e1e8ea;
+  overflow: hidden;
+  padding: 0 10px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+th {
+  color: #38484d;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+th button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-weight: 800;
+  text-align: left;
+}
+
+tbody {
+  position: relative;
+  display: block;
+}
+
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+tbody tr {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+}
+
+tbody tr[data-selected="true"] {
+  background: #eef8f4;
+}
+
+td input,
+td select {
+  width: 100%;
+}
+
+.state-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #526368;
+  padding: 24px;
+}
+
+.empty-state {
+  position: sticky;
+  left: 0;
+}
+
+.pagination {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.pagination label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 1120px) {
+  .control-bar {
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    padding: 14px;
+  }
+
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .control-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .table-scroll {
+    height: 58vh;
+  }
+}
