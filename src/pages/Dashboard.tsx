@@ -21,6 +21,9 @@ import TuneIcon from "@mui/icons-material/Tune";
 import { useUpdateRecord } from "../hooks/useUpdateRecord";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { fetchAllMatchingRecords } from "../api/recordsApi";
+
+import { exportRecordsToCsv } from "../utils/exportCsv";
 
 const defaultFilters: TrackFilters = {
   trackName: "",
@@ -190,11 +193,31 @@ const Dashboard = () => {
     return newRow;
   };
 
+  const handleExportSelected = () => {
+    const selectedIds = rowSelectionModel.ids;
+
+    const selectedRecords = rows.filter((row) => selectedIds.has(row.id));
+
+    exportRecordsToCsv(selectedRecords, "selected-tracks.csv");
+  };
+
+  const handleExportCurrentView = async () => {
+    const records = await fetchAllMatchingRecords(query);
+
+    exportRecordsToCsv(records, "spotify-tracks.csv");
+  };
+
+  const selectedCount =
+    rowSelectionModel.type === "include"
+      ? rowSelectionModel.ids.size
+      : total - rowSelectionModel.ids.size;
+
   return (
     <main className="app-shell">
       <header className="toolbar">
         <div>
           <h1>Spotify Tracks</h1>
+          <p className="toolbar-subtitle">Search, filter and manage tracks</p>
         </div>
       </header>
 
@@ -208,18 +231,42 @@ const Dashboard = () => {
         </div>
       )}
 
-      <SearchBar
-        value={search}
-        onChange={setSearch}
-        onClear={() => setSearch("")}
-      />
+      <div className="top-actions">
+        <div className="top-actions-search-div">
+          <SearchBar
+            value={search}
+            onChange={setSearch}
+            onClear={() => setSearch("")}
+          />
+
+          <button
+            className="filter-btn"
+            onClick={() => {
+              setDraftFilters(filters);
+              setFilterOpen(true);
+            }}
+          >
+            <TuneIcon />
+            Advanced Seach
+            {activeFilterCount > 0 && (
+              <span className="filter-badge">{activeFilterCount}</span>
+            )}
+          </button>
+        </div>
+
+        <div className="top-actions-btn">
+          <button className="bulk-btn" onClick={handleExportCurrentView}>
+            Export Current View
+          </button>
+        </div>
+      </div>
 
       {debouncedSearch && (
         <div className="search-indicator">
           Searching for:&nbsp;<strong>{debouncedSearch}</strong>
         </div>
       )}
-      <div className="table-actions">
+      {/* <div className="table-actions">
         <button
           className="filter-btn"
           onClick={() => {
@@ -228,12 +275,12 @@ const Dashboard = () => {
           }}
         >
           <TuneIcon />
-          Filters
+          Advanced Seach
           {activeFilterCount > 0 && (
             <span className="filter-badge">{activeFilterCount}</span>
           )}
         </button>
-      </div>
+      </div> */}
       <ActiveFilters filters={filters} onRemove={removeFilter} />
 
       <FilterDrawer
@@ -265,13 +312,18 @@ const Dashboard = () => {
         {rowSelectionModel.ids.size > 0 && (
           <div className="bulk-bar">
             <div className="bulk-bar-left">
-              {rowSelectionModel.ids.size} rows selected
+              {selectedCount.toLocaleString()} rows selected
             </div>
 
             <div className="bulk-bar-actions">
-              <button className="bulk-btn">Export</button>
+              <button
+                className="bulk-export-btn"
+                onClick={handleExportSelected}
+              >
+                Export Selected
+              </button>
 
-              <button className="bulk-btn">Delete</button>
+              {/* <button className="bulk-btn">Delete</button> */}
             </div>
           </div>
         )}
