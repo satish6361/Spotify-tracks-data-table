@@ -19,6 +19,8 @@ import type { GridRowSelectionModel } from "@mui/x-data-grid";
 import ActiveFilters from "../components/ActiveFilters";
 import TuneIcon from "@mui/icons-material/Tune";
 import { useUpdateRecord } from "../hooks/useUpdateRecord";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const defaultFilters: TrackFilters = {
   trackName: "",
@@ -89,13 +91,13 @@ const Dashboard = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [draftFilters, setDraftFilters] =
     useState<TrackFilters>(defaultFilters);
-  const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>({
       type: "include",
       ids: new Set(),
     });
-  const updateRecordMutation = useUpdateRecord();
+  const [errorMessage, setErrorMessage] = useState("");
+  const updateRecordMutation = useUpdateRecord(setErrorMessage);
 
   const query = useMemo<RecordsQuery>(
     () => ({
@@ -333,6 +335,16 @@ const Dashboard = () => {
           }} // TODO: Snack bar for error
         />
       </section>
+
+      <Snackbar
+        open={Boolean(errorMessage)}
+        autoHideDuration={3000}
+        onClose={() => setErrorMessage("")}
+      >
+        <Alert severity="error" onClose={() => setErrorMessage("")}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </main>
   );
 };
