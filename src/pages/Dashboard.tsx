@@ -1,10 +1,13 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRecords } from "../hooks/useRecords";
 import type { RecordsQuery, SortField, TrackFilters } from "../types/record";
 import "../App.css";
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef } from "@mui/x-data-grid";
 import type { GridSortModel } from "@mui/x-data-grid";
+import { useDebounce } from "../hooks/useDebounce";
+import SearchBar from "../components/SearchBar";
+import NoResultsOverlay from "../components/NoResultsOverlay";
 
 const defaultFilters: TrackFilters = {
   trackName: "",
@@ -69,21 +72,28 @@ const Dashboard = () => {
     [sortField, sortDirection],
   );
 
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
+
   const query = useMemo<RecordsQuery>(
     () => ({
       page,
       pageSize,
-      search: "",
+      search: debouncedSearch,
       sortField,
       sortDirection,
       filters: defaultFilters,
     }),
-    [page, pageSize, sortField, sortDirection],
+    [page, pageSize, debouncedSearch, sortField, sortDirection],
   );
 
   const { data, isFetching, isLoading, error, refetch } = useRecords(query);
   const rows = data?.rows ?? [];
   const total = data?.total ?? 0;
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
 
   return (
     <main className="app-shell">
@@ -100,6 +110,17 @@ const Dashboard = () => {
           <button type="button" onClick={() => void refetch()}>
             Retry
           </button>
+        </div>
+      )}
+
+      <SearchBar
+        value={search}
+        onChange={setSearch}
+        onClear={() => setSearch("")}
+      />
+      {debouncedSearch && (
+        <div className="search-indicator">
+          Searching for:&nbsp;<strong>{debouncedSearch}</strong>
         </div>
       )}
 
@@ -124,15 +145,18 @@ const Dashboard = () => {
             pageSize,
           }}
           sortModel={sortModel}
+          localeText={{
+            paginationRowsPerPage: "Results per page",
+          }}
+          slots={{
+            noRowsOverlay: () => <NoResultsOverlay search={debouncedSearch} />,
+          }}
           onPaginationModelChange={(model) => {
             setPage(model.page + 1);
             setPageSize(model.pageSize);
           }}
           onSortModelChange={(model) => {
-            if (!model.length) {
-              console.log("Neutral state");
-              return;
-            }
+            if (!model.length) return;
 
             const { field, sort } = model[0];
 
