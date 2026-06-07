@@ -150,3 +150,9 @@
 .bulk-btn:hover {
   background: #f5f5f5;
 }
+
+.table-hint {
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #6b7280;
+}

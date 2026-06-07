@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRecords } from "../hooks/useRecords";
-import type { RecordsQuery, SortField, TrackFilters } from "../types/record";
+import type {
+  RecordsQuery,
+  SortField,
+  TrackFilters,
+  TrackRecord,
+} from "../types/record";
 // import "../App.css";
 import "../styles/Dashboard.css";
 import { DataGrid } from "@mui/x-data-grid";
@@ -13,6 +18,7 @@ import FilterDrawer from "../components/FilterDrawer";
 import type { GridRowSelectionModel } from "@mui/x-data-grid";
 import ActiveFilters from "../components/ActiveFilters";
 import TuneIcon from "@mui/icons-material/Tune";
+import { useUpdateRecord } from "../hooks/useUpdateRecord";
 
 const defaultFilters: TrackFilters = {
   trackName: "",
@@ -81,12 +87,15 @@ const Dashboard = () => {
   const debouncedSearch = useDebounce(search, 300);
   const [filters, setFilters] = useState<TrackFilters>(defaultFilters);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [draftFilters, setDraftFilters] =
+    useState<TrackFilters>(defaultFilters);
   const [selectedRows, setSelectedRows] = useState<(string | number)[]>([]);
   const [rowSelectionModel, setRowSelectionModel] =
     useState<GridRowSelectionModel>({
       type: "include",
       ids: new Set(),
     });
+  const updateRecordMutation = useUpdateRecord();
 
   const query = useMemo<RecordsQuery>(
     () => ({
@@ -156,6 +165,29 @@ const Dashboard = () => {
     setPage(1);
   }, [debouncedSearch]);
 
+  const processRowUpdate = async (newRow: TrackRecord, oldRow: TrackRecord) => {
+    const changes: Partial<TrackRecord> = {};
+
+    Object.keys(newRow).forEach((key) => {
+      const field = key as keyof TrackRecord;
+
+      if (newRow[field] !== oldRow[field]) {
+        changes[field] = newRow[field] as never;
+      }
+    });
+
+    if (Object.keys(changes).length === 0) {
+      return oldRow;
+    }
+
+    await updateRecordMutation.mutateAsync({
+      id: newRow.id,
+      changes,
+    });
+
+    return newRow;
+  };
+
   return (
     <main className="app-shell">
       <header className="toolbar">
@@ -186,7 +218,13 @@ const Dashboard = () => {
         </div>
       )}
       <div className="table-actions">
-        <button className="filter-btn" onClick={() => setFilterOpen(true)}>
+        <button
+          className="filter-btn"
+          onClick={() => {
+            setDraftFilters(filters);
+            setFilterOpen(true);
+          }}
+        >
           <TuneIcon />
           Filters
           {activeFilterCount > 0 && (
@@ -198,15 +236,22 @@ const Dashboard = () => {
 
       <FilterDrawer
         open={filterOpen}
-        filters={filters}
+        filters={draftFilters}
         onClose={() => setFilterOpen(false)}
-        onClear={() => setFilters(defaultFilters)}
+        onClear={() => {
+          setDraftFilters(defaultFilters);
+        }}
         onChange={(changes) =>
-          setFilters((current) => ({
+          setDraftFilters((current) => ({
             ...current,
             ...changes,
           }))
         }
+        onApply={() => {
+          setFilters(draftFilters);
+          setPage(1);
+          setFilterOpen(false);
+        }}
       />
 
       <section
@@ -228,6 +273,9 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+        <div className="table-hint">
+          Double-click a cell to edit and save changes.
+        </div>
         <DataGrid
           rows={rows}
           columns={gridColumns}
@@ -279,6 +327,10 @@ const Dashboard = () => {
               backgroundColor: "#f8fbff",
             },
           }}
+          processRowUpdate={processRowUpdate}
+          onProcessRowUpdateError={(error) => {
+            console.error(error);
+          }} // TODO: Snack bar for error
         />
       </section>
     </main>

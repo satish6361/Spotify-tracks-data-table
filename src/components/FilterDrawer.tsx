@@ -7,6 +7,13 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import type { TrackFilters } from "../types/record";
 import "../styles/FilterDrawer.css";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Checkbox from "@mui/material/Checkbox";
+import ListItemText from "@mui/material/ListItemText";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { Typography } from "@mui/material";
 
 type Props = {
   open: boolean;
@@ -14,11 +21,19 @@ type Props = {
   onClose: () => void;
   onChange: (changes: Partial<TrackFilters>) => void;
   onClear: () => void;
+  onApply: () => void;
 };
 
 const genres = ["pop", "rock", "rap", "hip hop", "edm"];
 
-const FilterDrawer = ({ open, filters, onClose, onChange, onClear }: Props) => {
+const FilterDrawer = ({
+  open,
+  filters,
+  onClose,
+  onChange,
+  onClear,
+  onApply,
+}: Props) => {
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <div className="filter-drawer">
@@ -29,6 +44,10 @@ const FilterDrawer = ({ open, filters, onClose, onChange, onClear }: Props) => {
             <CloseIcon />
           </IconButton>
         </div>
+
+        <Typography variant="body2" color="text.secondary">
+          Refine tracks using filters below
+        </Typography>
         <Divider />
 
         {/* <TextField
@@ -69,7 +88,7 @@ const FilterDrawer = ({ open, filters, onClose, onChange, onClear }: Props) => {
           }
         />
 
-        <TextField
+        {/* <TextField
           select
           label="Genre"
           size="small"
@@ -86,7 +105,34 @@ const FilterDrawer = ({ open, filters, onClose, onChange, onClear }: Props) => {
           <MenuItem value="rock">Rock</MenuItem>
           <MenuItem value="rap">Rap</MenuItem>
           <MenuItem value="edm">EDM</MenuItem>
-        </TextField>
+        </TextField> */}
+
+        <FormControl fullWidth size="small">
+          <InputLabel>Genres</InputLabel>
+
+          <Select
+            multiple
+            value={filters.genres}
+            onChange={(event) =>
+              onChange({
+                genres:
+                  typeof event.target.value === "string"
+                    ? event.target.value.split(",")
+                    : event.target.value,
+              })
+            }
+            input={<OutlinedInput label="Genres" />}
+            renderValue={(selected) => selected.join(", ")}
+          >
+            {genres.map((genre) => (
+              <MenuItem key={genre} value={genre}>
+                <Checkbox checked={filters.genres.includes(genre)} />
+
+                <ListItemText primary={genre} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <div className="filter-section">
           <label>Popularity</label>
@@ -175,7 +221,7 @@ const FilterDrawer = ({ open, filters, onClose, onChange, onClear }: Props) => {
             Clear All
           </Button>
 
-          <Button variant="contained" onClick={onClose}>
+          <Button variant="contained" onClick={onApply}>
             Apply Filters
           </Button>
         </div>
