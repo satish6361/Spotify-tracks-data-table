@@ -4,7 +4,9 @@ import { createInterface } from "node:readline";
 const [, , csvPath, outPath = "db.json"] = process.argv;
 
 if (!csvPath) {
-  console.error("Usage: node scripts/prepare-spotify-db.mjs spotify.csv db.json");
+  console.error(
+    "Usage: node scripts/prepare-spotify-db.mjs spotify.csv db.json",
+  );
   process.exit(1);
 }
 
@@ -39,7 +41,8 @@ const normalizeNumber = (value) => {
   return Number.isFinite(number) ? number : undefined;
 };
 
-const normalizeBoolean = (value) => ["true", "1", "yes"].includes(String(value).toLowerCase());
+const normalizeBoolean = (value) =>
+  ["true", "1", "yes"].includes(String(value).toLowerCase());
 
 const rows = [];
 let headers = [];
@@ -55,11 +58,14 @@ for await (const line of reader) {
   }
 
   const values = parseCsvLine(line);
-  const raw = Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""]));
-  const id = raw.id || raw.track_id || String(rows.length + 1);
+  const raw = Object.fromEntries(
+    headers.map((header, index) => [header, values[index] ?? ""]),
+  );
+  const sourceTrackId = raw.track_id || raw.id || "";
 
   rows.push({
-    id: String(id),
+    id: rows.length + 1,
+    spotify_id: raw.track_id,
     track_name: raw.track_name || raw.name || raw.track || "Untitled track",
     artist: raw.artist || raw.track_artist || raw.artists || "Unknown artist",
     album: raw.album || raw.track_album_name || "",

@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import { useRecords } from "../hooks/useRecords";
-import type { RecordsQuery, TrackFilters } from "../types/record";
+import type { RecordsQuery, SortField, TrackFilters } from "../types/record";
 import "../App.css";
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef } from "@mui/x-data-grid";
+import type { GridSortModel } from "@mui/x-data-grid";
 
 const defaultFilters: TrackFilters = {
   trackName: "",
@@ -56,17 +57,28 @@ const gridColumns: GridColDef[] = [
 const Dashboard = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(50);
+  const [sortField, setSortField] = useState<SortField>("popularity");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const sortModel = useMemo<GridSortModel>(
+    () => [
+      {
+        field: sortField,
+        sort: sortDirection,
+      },
+    ],
+    [sortField, sortDirection],
+  );
 
   const query = useMemo<RecordsQuery>(
     () => ({
       page,
       pageSize,
       search: "",
-      sortField: "popularity",
-      sortDirection: "desc",
+      sortField,
+      sortDirection,
       filters: defaultFilters,
     }),
-    [page, pageSize],
+    [page, pageSize, sortField, sortDirection],
   );
 
   const { data, isFetching, isLoading, error, refetch } = useRecords(query);
@@ -105,14 +117,27 @@ const Dashboard = () => {
           rowCount={total}
           paginationMode="server"
           sortingMode="server"
+          sortingOrder={["desc", "asc"]}
           pageSizeOptions={[25, 50, 100]}
           paginationModel={{
             page: page - 1,
             pageSize,
           }}
+          sortModel={sortModel}
           onPaginationModelChange={(model) => {
             setPage(model.page + 1);
             setPageSize(model.pageSize);
+          }}
+          onSortModelChange={(model) => {
+            if (!model.length) {
+              console.log("Neutral state");
+              return;
+            }
+
+            const { field, sort } = model[0];
+
+            setSortField(field as SortField);
+            setSortDirection((sort ?? "asc") as "asc" | "desc");
           }}
         />
       </section>
