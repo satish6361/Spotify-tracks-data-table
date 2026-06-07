@@ -1,4 +1,5 @@
 import SearchIcon from "@mui/icons-material/Search";
+import "../styles/SearchBar.css";
 
 type SearchBarProps = {
   value: string;

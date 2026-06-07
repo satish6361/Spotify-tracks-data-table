@@ -1,0 +1,134 @@
+.filter-drawer {
+  width: 420px;
+  height: 100%;
+  background: #fafafa;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter-content {
+  flex: 1;
+  overflow-y: auto;
+
+  padding: 24px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.range-row {
+  display: flex;
+  gap: 12px;
+}
+
+.drawer-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.drawer-footer {
+  border-top: 1px solid #e5e7eb;
+
+  background: white;
+
+  padding: 16px 24px;
+
+  display: flex;
+  justify-content: space-between;
+}
+.filter-drawer {
+  width: 360px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-drawer h2 {
+  margin: 0;
+}
+
+.filter-drawer input,
+.filter-drawer select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+}
+
+.filter-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-drawer .MuiInputLabel-root {
+  background: #fafafa;
+  padding: 0 4px;
+}
+
+.filter-drawer .MuiOutlinedInput-input {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.filter-drawer .MuiTextField-root {
+  width: 100%;
+}
+
+.filter-drawer .MuiOutlinedInput-root {
+  border-radius: 10px;
+  background: white;
+}
+
+.filter-drawer .MuiOutlinedInput-root:hover {
+  background: #fcfcfc;
+}
+
+.filter-drawer .MuiOutlinedInput-root.Mui-focused {
+  background: white;
+}

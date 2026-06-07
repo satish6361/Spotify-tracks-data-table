@@ -6,6 +6,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import type { TrackFilters } from "../types/record";
+import "../styles/FilterDrawer.css";
 
 type Props = {
   open: boolean;

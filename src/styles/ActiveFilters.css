@@ -1,0 +1,26 @@
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.filter-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: #eef6ff;
+  border: 1px solid #cfe4ff;
+
+  border-radius: 999px;
+  padding: 6px 12px;
+
+  font-size: 13px;
+}
+
+.chip-remove {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}

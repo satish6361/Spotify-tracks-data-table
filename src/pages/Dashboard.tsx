@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRecords } from "../hooks/useRecords";
 import type { RecordsQuery, SortField, TrackFilters } from "../types/record";
-import "../App.css";
+// import "../App.css";
+import "../styles/Dashboard.css";
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef } from "@mui/x-data-grid";
 import type { GridSortModel } from "@mui/x-data-grid";

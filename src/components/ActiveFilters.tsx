@@ -1,4 +1,5 @@
 import type { TrackFilters } from "../types/record";
+import "../styles/ActiveFilters.css";
 
 type Props = {
   filters: TrackFilters;
