@@ -8,8 +8,6 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "json-server --watch db.json --port 3000",
-    "prepare:data": "node scripts/prepare-spotify-db.mjs spotify.csv db.json",
     "test": "vitest run"
   },
   "dependencies": {

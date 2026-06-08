@@ -23,8 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
-*.csv
+# *.csv
 *.xlsx
-
+/backend/db.json
 
 .env
+/backend/node_modules
