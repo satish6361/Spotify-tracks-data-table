@@ -5,6 +5,20 @@ A high-performance React application for exploring and managing a large Spotify 
 ## Live Demo
 https://www.loom.com/share/300e8a764c1545c69f45daf1c8d355ee
 
+## Deployment
+
+### Frontend
+
+Netlify:
+https://spotify-tracks.netlify.app/
+
+### Backend API
+
+Render:
+https://spotify-json-server-ivax.onrender.com
+
+The frontend communicates with the deployed json-server API hosted on Render.
+
 **Hosted URL:** https://spotify-tracks.netlify.app/
 
 ## Repository
@@ -228,15 +242,26 @@ Features:
 ## Project Structure
 
 ```text
-src/
-├── api/
-├── components/
-├── hooks/
-├── pages/
-├── styles/
-├── types/
-├── utils/
-└── tests/
+.
+├── backend/
+│   ├── data/
+│   │   └── spotify_songs.csv
+│   ├── scripts/
+│   │   └── prepare-spotify-db.mjs
+│   ├── db.json
+│   └── package.json
+│
+├── src/
+│   ├── api/
+│   ├── components/
+│   ├── hooks/
+│   ├── pages/
+│   ├── styles/
+│   ├── types/
+│   └── utils/
+│
+├── .env.example
+└── README.md
 ```
 
 ---
