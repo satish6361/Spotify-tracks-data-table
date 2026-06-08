@@ -19,8 +19,6 @@ https://spotify-json-server-ivax.onrender.com
 
 The frontend communicates with the deployed json-server API hosted on Render.
 
-**Hosted URL:** https://spotify-tracks.netlify.app/
-
 ## Repository
 
 **GitHub:** https://github.com/satish6361/Spotify-tracks-data-table
