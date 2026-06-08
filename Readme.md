@@ -3,7 +3,7 @@
 A high-performance React application for exploring and managing a large Spotify tracks dataset through a feature-rich, server-driven data table.
 
 ## Live Demo
-**Walkthrough: ** https://www.loom.com/share/300e8a764c1545c69f45daf1c8d355ee
+https://www.loom.com/share/300e8a764c1545c69f45daf1c8d355ee
 
 **Hosted URL:** https://spotify-tracks.netlify.app/
 
@@ -425,6 +425,12 @@ The application scope did not justify additional complexity.
 ---
 
 ## Screenshots
+<img width="1918" height="865" alt="image" src="https://github.com/user-attachments/assets/daf65dbb-66b1-45a2-8865-6e5fa458269b" />
+<img width="1918" height="867" alt="image" src="https://github.com/user-attachments/assets/6beb8521-d456-469c-93ff-a75c3228d8c8" />
+<img width="1918" height="867" alt="image" src="https://github.com/user-attachments/assets/ae8445e1-70a3-4c5f-84c9-bb114984b545" />
+
+
+
 
 ---
 
