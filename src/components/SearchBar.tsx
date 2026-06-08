@@ -16,7 +16,7 @@ const SearchBar = ({ value, onChange, onClear }: SearchBarProps) => {
         type="text"
         placeholder="Search tracks, artists, albums..."
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         className="search-input"
       />
 
@@ -27,7 +27,7 @@ const SearchBar = ({ value, onChange, onClear }: SearchBarProps) => {
           type="button"
           aria-label="Clear search"
         >
-          ✕
+          x
         </button>
       )}
     </div>

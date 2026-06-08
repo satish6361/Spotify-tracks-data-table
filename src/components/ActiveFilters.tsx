@@ -39,14 +39,14 @@ const ActiveFilters = ({ filters, onRemove }: Props) => {
 
   if (filters.minTempo || filters.maxTempo) {
     chips.push({
-      label: `Tempo: ${filters.minTempo || 0} - ${filters.maxTempo || "∞"}`,
+      label: `Tempo: ${filters.minTempo || 0} - ${filters.maxTempo || "max"}`,
       key: "minTempo",
     });
   }
 
   if (filters.releaseFrom || filters.releaseTo) {
     chips.push({
-      label: `Release: ${filters.releaseFrom || "..."} → ${filters.releaseTo || "..."}`,
+      label: `Release: ${filters.releaseFrom || "..."} to ${filters.releaseTo || "..."}`,
       key: "releaseFrom",
     });
   }
@@ -63,8 +63,9 @@ const ActiveFilters = ({ filters, onRemove }: Props) => {
             type="button"
             className="chip-remove"
             onClick={() => onRemove(chip.key)}
+            aria-label={`Remove ${chip.label}`}
           >
-            ×
+            x
           </button>
         </div>
       ))}
