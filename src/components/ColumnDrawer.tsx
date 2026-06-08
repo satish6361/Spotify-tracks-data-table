@@ -50,65 +50,72 @@ export default function ColumnDrawer({
 
         <Divider />
 
-        {columns.map((column) => (
-          <div key={column.key} className="column-drawer-item">
-            <div className="column-drawer-row">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={column.visible}
-                    onChange={(event) =>
-                      onToggle(column.key, event.target.checked)
-                    }
-                  />
-                }
-                label={column.label}
-              />
+        <div className="drawer-scroll">
+          {columns.map((column) => (
+            <div key={column.key} className="column-drawer-item">
+              <div className="column-drawer-row">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={column.visible}
+                      onChange={(event) =>
+                        onToggle(column.key, event.target.checked)
+                      }
+                    />
+                  }
+                  label={column.label}
+                />
 
-              <div className="column-drawer-actions">
-                <IconButton
-                  onClick={() => onMove(column.key, -1)}
-                  aria-label={`Move ${column.label} left`}
-                  size="small"
-                >
-                  <ArrowBackIcon fontSize="small" />
-                </IconButton>
+                <div className="column-drawer-actions">
+                  <IconButton
+                    onClick={() => onMove(column.key, -1)}
+                    aria-label={`Move ${column.label} left`}
+                    size="small"
+                  >
+                    <ArrowBackIcon fontSize="small" />
+                  </IconButton>
 
-                <IconButton
-                  onClick={() => onMove(column.key, 1)}
-                  aria-label={`Move ${column.label} right`}
-                  size="small"
-                >
-                  <ArrowForwardIcon fontSize="small" />
-                </IconButton>
+                  <IconButton
+                    onClick={() => onMove(column.key, 1)}
+                    aria-label={`Move ${column.label} right`}
+                    size="small"
+                  >
+                    <ArrowForwardIcon fontSize="small" />
+                  </IconButton>
+                </div>
               </div>
+
+              <label className="column-width-control">
+                <span>Width</span>
+                <input
+                  aria-label={`${column.label} width`}
+                  type="number"
+                  min="90"
+                  max="420"
+                  step="10"
+                  value={column.width}
+                  onChange={(event) =>
+                    onWidthChange(column.key, Number(event.target.value))
+                  }
+                />
+              </label>
             </div>
-
-            <label className="column-width-control">
-              <span>Width</span>
-              <input
-                aria-label={`${column.label} width`}
-                type="number"
-                min="90"
-                max="420"
-                step="10"
-                value={column.width}
-                onChange={(event) =>
-                  onWidthChange(column.key, Number(event.target.value))
-                }
-              />
-            </label>
-          </div>
-        ))}
-
+          ))}
+        </div>
         <div className="drawer-footer">
-          <Button variant="outlined" onClick={onReset}>
+          <button
+            onClick={onReset}
+            className="filter-footer-btn filter-footer-btn-secondary"
+          >
             Reset
-          </Button>
+          </button>
 
-          <Button variant="contained" onClick={onClose}>
+          <button
+            onClick={onClose}
+            className="filter-footer-btn filter-footer-btn-primary"
+          >
             Done
-          </Button>
+          </button>
         </div>
       </div>
     </Drawer>

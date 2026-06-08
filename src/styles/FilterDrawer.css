@@ -5,18 +5,8 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(45, 212, 191, 0.12),
-      transparent 24%
-    ),
-    radial-gradient(
-      circle at top right,
-      rgba(249, 115, 22, 0.12),
-      transparent 18%
-    ),
-    linear-gradient(180deg, #f8fafc, #eef2ff);
+  background: var(--filter-drawer-bg);
+  color: var(--page-text);
 }
 
 .filter-header {
@@ -29,12 +19,12 @@
 .filter-header h2 {
   margin: 0;
   font-size: 1.5rem;
-  color: #0f172a;
+  color: var(--page-text);
 }
 
 .filter-header p {
   margin: 6px 0 0;
-  color: #64748b;
+  color: var(--page-subtle);
   line-height: 1.5;
 }
 
@@ -44,9 +34,9 @@
   gap: 12px;
   flex-wrap: wrap;
   padding: 14px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  border: 1px solid var(--surface-border);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--surface-glass);
 }
 
 .filter-scroll {
@@ -62,10 +52,10 @@
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  border: 1px solid var(--surface-border);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 14px 32px rgba(148, 163, 184, 0.08);
+  background: var(--surface-soft);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
 }
 
 .filter-section-title {
@@ -73,7 +63,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #0f766e;
+  color: var(--accent);
 }
 
 .range-row {
@@ -91,12 +81,12 @@
 }
 
 .filter-drawer .MuiInputLabel-root {
-  color: #64748b;
+  color: var(--page-subtle);
   background: transparent;
 }
 
 .filter-drawer .MuiInputLabel-root.Mui-focused {
-  color: #0f766e;
+  color: var(--accent);
 }
 
 .filter-drawer .MuiTextField-root,
@@ -106,41 +96,50 @@
 
 .filter-drawer .MuiOutlinedInput-root {
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--input-bg);
+  color: var(--page-text);
 }
 
 .filter-drawer .MuiOutlinedInput-notchedOutline {
-  border-color: rgba(148, 163, 184, 0.28);
+  border-color: var(--input-border);
   transition:
     border-color 180ms ease,
     box-shadow 180ms ease;
 }
 
 .filter-drawer .MuiOutlinedInput-root:hover {
-  background: #ffffff;
+  background: var(--input-bg);
 }
 
 .filter-drawer .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-  border-color: rgba(15, 118, 110, 0.34);
+  border-color: var(--input-border-strong);
 }
 
 .filter-drawer .MuiOutlinedInput-root.Mui-focused {
-  background: #ffffff;
+  background: var(--input-bg);
 }
 
 .filter-drawer
   .MuiOutlinedInput-root.Mui-focused
   .MuiOutlinedInput-notchedOutline {
-  border-color: #0f766e;
+  border-color: var(--accent);
   border-width: 1px;
 }
 
+.filter-drawer .MuiInputBase-input {
+  color: var(--page-text);
+}
+
+.filter-drawer .MuiSvgIcon-root {
+  color: var(--page-subtle);
+}
+
 .filter-drawer .MuiCheckbox-root {
-  color: #94a3b8;
+  color: var(--page-subtle);
 }
 
 .filter-drawer .MuiCheckbox-root.Mui-checked {
-  color: #0f766e;
+  color: var(--accent);
 }
 
 .filter-drawer .MuiChip-root {
@@ -167,18 +166,18 @@
 }
 
 .filter-footer-btn-secondary {
-  border-color: rgba(148, 163, 184, 0.2);
-  background: rgba(255, 255, 255, 0.82);
-  color: #0f172a;
+  border-color: var(--surface-border);
+  background: var(--surface-soft);
+  color: var(--page-text);
 }
 
 .filter-footer-btn-secondary:hover {
-  border-color: rgba(148, 163, 184, 0.28);
-  background: rgba(255, 255, 255, 0.94);
+  border-color: var(--input-border);
+  background: var(--surface-strong);
 }
 
 .filter-footer-btn-primary {
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  border: 1px solid var(--surface-border);
   background: linear-gradient(135deg, #297f7b, #266062);
   color: #fff7ed;
   box-shadow: 0 14px 30px rgba(38, 96, 98, 0.18);

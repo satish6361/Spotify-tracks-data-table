@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef, GridSortModel } from "@mui/x-data-grid";
 import type { GridRowSelectionModel } from "@mui/x-data-grid";
@@ -6,6 +6,8 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import TuneIcon from "@mui/icons-material/Tune";
 import ViewColumnRoundedIcon from "@mui/icons-material/ViewColumnRounded";
+import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
+import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import { fetchAllMatchingRecords } from "../api/recordsApi";
 import ActiveFilters from "../components/ActiveFilters";
 import ColumnDrawer, {
@@ -68,7 +70,7 @@ const defaultColumns: TableColumnPreference[] = [
     sortable: true,
   },
   { key: "artist", label: "Artist", width: 190, visible: true, sortable: true },
-  { key: "album", label: "Album", width: 220, visible: true, sortable: true },
+  { key: "album", label: "Album", width: 250, visible: true, sortable: true },
   { key: "genre", label: "Genre", width: 140, visible: true, sortable: true },
   {
     key: "popularity",
@@ -183,9 +185,14 @@ const Dashboard = () => {
     "spotify-table-columns",
     defaultColumns,
   );
+  const [themeMode, setThemeMode] = useLocalStorage<"light" | "dark">(
+    "spotify-table-theme",
+    "light",
+  );
 
   const debouncedSearch = useDebounce(search, 300);
   const updateRecordMutation = useUpdateRecord(setErrorMessage);
+  const isDarkMode = themeMode === "dark";
   const sortModel = useMemo<GridSortModel>(
     () => [
       {
@@ -236,6 +243,10 @@ const Dashboard = () => {
       })),
     [columns],
   );
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = themeMode;
+  }, [themeMode]);
 
   const columnVisibilityModel = useMemo(
     () =>
@@ -351,7 +362,10 @@ const Dashboard = () => {
 
   const handleExportSelected = () => {
     const selectedIds = rowSelectionModel.ids;
-    const selectedRecords = rows.filter((row) => selectedIds.has(row.id));
+    const selectedRecords =
+      rowSelectionModel.type === "include"
+        ? rows.filter((row) => selectedIds.has(row.id))
+        : rows.filter((row) => !selectedIds.has(row.id));
     exportRecordsToCsv(selectedRecords, "selected-tracks.csv");
   };
 
@@ -364,10 +378,36 @@ const Dashboard = () => {
     <main className="app-shell">
       <header className="hero-panel">
         <div className="hero-copy">
-          <h1>Spotify Tracks</h1>
+          <div className="hero-title-row">
+            <img
+              className="hero-logo"
+              src="/images/spotify-white-outline.png"
+              alt="Spotify outline logo"
+            />
+            <h1>Spotify Tracks</h1>
+          </div>
           <p className="toolbar-subtitle">
             Browse a large catalog, tune the visible data, and edit records.
           </p>
+        </div>
+
+        <div className="hero-actions">
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={() =>
+              setThemeMode((current) => (current === "dark" ? "light" : "dark"))
+            }
+            aria-label={`Switch to ${isDarkMode ? "light" : "dark"} mode`}
+          >
+            {isDarkMode ? <LightModeRoundedIcon /> : <DarkModeRoundedIcon />}
+            <span className="theme-toggle-label">
+              {isDarkMode ? "Light" : "Dark"}
+            </span>
+            <span className="theme-toggle-switch" aria-hidden="true">
+              <span className="theme-toggle-thumb" />
+            </span>
+          </button>
         </div>
       </header>
 
@@ -465,7 +505,7 @@ const Dashboard = () => {
       />
 
       <section className="table-panel">
-        {rowSelectionModel.ids.size > 0 && (
+        {selectedCount > 0 && (
           <div className="bulk-bar">
             <div className="bulk-bar-left">
               {selectedCount.toLocaleString()} rows selected
@@ -489,7 +529,8 @@ const Dashboard = () => {
               {total.toLocaleString()}
             </div>
             <div className="table-hint">
-              Double-click a cell to edit. Selection applies to the loaded page.
+              Double-click a cell to edit. Select all applies to the current
+              page.
             </div>
           </div>
         </div>
@@ -500,6 +541,7 @@ const Dashboard = () => {
           loading={isLoading || isFetching}
           rowCount={total}
           checkboxSelection
+          disableRowSelectionExcludeModel
           disableRowSelectionOnClick
           density="comfortable"
           paginationMode="server"
@@ -543,33 +585,94 @@ const Dashboard = () => {
             updateColumn(String(params.colDef.field), { width: params.width });
           }}
           sx={{
+            "& .MuiDataGrid-columnHeaderTitleContainer": {
+              justifyContent: "space-between",
+              width: "100%",
+            },
             border: "none",
             minHeight: 700,
             backgroundColor: "transparent",
             "& .MuiDataGrid-main": {
               borderRadius: "20px",
             },
-            "& .MuiDataGrid-columnHeaders": {
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.92), rgba(244,247,255,0.96))",
-              borderBottom: "1px solid rgba(102, 126, 234, 0.18)",
-              fontWeight: 700,
-            },
+            // "& .MuiDataGrid-columnHeaders": {
+            //   background: isDarkMode
+            //     ? "linear-gradient(180deg, rgba(15,23,42,0.96), rgba(17,24,39,0.96))"
+            //     : "linear-gradient(90deg, rgba(14,116,144,0.96), rgba(15,118,110,0.94) 45%, rgba(249,115,22,0.92))",
+            //   borderBottom: isDarkMode
+            //     ? "1px solid rgba(148, 163, 184, 0.16)"
+            //     : "1px solid rgba(14, 116, 144, 0.24)",
+            //   fontWeight: 700,
+            //   color: isDarkMode ? "#f8fafc" : "#0f172a",
+            // },
+            // "& .MuiDataGrid-columnHeader": {
+            //   background: "#256364",
+            // },
+
+            // "& .MuiDataGrid-columnHeaderTitle": {
+            //   color: "#ffffff",
+            //   fontWeight: 700,
+            // },
             "& .MuiDataGrid-columnHeaderTitle": {
               fontWeight: 700,
             },
+            "& .MuiDataGrid-iconButtonContainer .MuiSvgIcon-root, & .MuiDataGrid-menuIconButton .MuiSvgIcon-root":
+              {
+                color: "#256364",
+                // color: isDarkMode
+                //   ? "rgba(15, 23, 42, 0.82)"
+                //   : "rgba(248, 250, 252, 0.92)",
+              },
+            "& .MuiDataGrid-virtualScroller": {
+              backgroundColor: isDarkMode
+                ? "rgba(15, 23, 42, 0.46)"
+                : "transparent",
+            },
             "& .MuiDataGrid-row": {
-              backgroundColor: "rgba(255,255,255,0.82)",
+              backgroundColor: isDarkMode
+                ? "rgba(15, 23, 42, 0.82)"
+                : "rgba(255,255,255,0.82)",
+              color: isDarkMode ? "#e2e8f0" : "#0f172a",
             },
             "& .MuiDataGrid-row:hover": {
-              backgroundColor: "rgba(240, 244, 255, 0.96)",
+              backgroundColor: isDarkMode
+                ? "rgba(30, 41, 59, 0.96)"
+                : "rgba(240, 244, 255, 0.96)",
+            },
+            "& .MuiDataGrid-row.Mui-selected": {
+              backgroundColor: isDarkMode
+                ? "rgba(17, 94, 89, 0.38)"
+                : "rgba(204, 251, 241, 0.86)",
+              color: isDarkMode ? "#f8fafc" : "#0f172a",
+            },
+            "& .MuiDataGrid-row.Mui-selected:hover": {
+              backgroundColor: isDarkMode
+                ? "rgba(15, 118, 110, 0.42)"
+                : "rgba(153, 246, 228, 0.88)",
             },
             "& .MuiDataGrid-cell": {
-              borderColor: "rgba(148, 163, 184, 0.18)",
+              borderColor: isDarkMode
+                ? "rgba(100, 116, 139, 0.18)"
+                : "rgba(148, 163, 184, 0.18)",
             },
             "& .MuiDataGrid-footerContainer": {
-              backgroundColor: "rgba(255,255,255,0.9)",
-              borderTop: "1px solid rgba(148, 163, 184, 0.16)",
+              backgroundColor: isDarkMode
+                ? "rgba(15, 23, 42, 0.9)"
+                : "rgba(255,255,255,0.9)",
+              borderTop: isDarkMode
+                ? "1px solid rgba(100, 116, 139, 0.16)"
+                : "1px solid rgba(148, 163, 184, 0.16)",
+              color: isDarkMode ? "#e2e8f0" : "#0f172a",
+            },
+            "& .MuiTablePagination-root, & .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows, & .MuiSvgIcon-root":
+              {
+                color: isDarkMode ? "#cbd5e1" : "#475569",
+              },
+            "& .MuiCheckbox-root": {
+              color: isDarkMode ? "#94a3b8" : "#64748b",
+            },
+            "& .MuiCheckbox-root.Mui-checked": {
+              color: isDarkMode ? "#5eead4" : "#0f766e",
             },
           }}
         />

@@ -1,9 +1,41 @@
 :root {
-  color: #14213d;
-  background:
+  color-scheme: light;
+  --page-text: #14213d;
+  --page-subtle: #64748b;
+  --page-bg:
     radial-gradient(circle at top left, rgba(45, 212, 191, 0.18), transparent 22%),
     radial-gradient(circle at right, rgba(251, 191, 36, 0.16), transparent 24%),
     linear-gradient(180deg, #eef4ff, #f8fafc 44%, #edfdf9);
+  --surface-glass: rgba(255, 255, 255, 0.72);
+  --surface-strong: rgba(255, 255, 255, 0.92);
+  --surface-soft: rgba(255, 255, 255, 0.82);
+  --surface-border: rgba(148, 163, 184, 0.16);
+  --surface-shadow: 0 18px 40px rgba(148, 163, 184, 0.14);
+  --input-bg: rgba(255, 255, 255, 0.95);
+  --input-border: rgba(148, 163, 184, 0.28);
+  --input-border-strong: rgba(15, 118, 110, 0.34);
+  --accent: #0f766e;
+  --accent-strong: #266062;
+  --accent-soft: rgba(45, 212, 191, 0.14);
+  --accent-text: #fff7ed;
+  --hero-text: #f8fafc;
+  --chip-bg: rgba(255, 247, 237, 0.9);
+  --chip-border: rgba(249, 115, 22, 0.2);
+  --chip-text: #9a3412;
+  --search-clear-bg: rgba(148, 163, 184, 0.12);
+  --search-clear-text: #334155;
+  --indicator-bg: rgba(255, 255, 255, 0.78);
+  --indicator-text: #0f766e;
+  --bulk-bg:
+    linear-gradient(135deg, rgba(240, 253, 250, 0.98), rgba(204, 251, 241, 0.92));
+  --bulk-text: #134e4a;
+  --drawer-bg:
+    radial-gradient(circle at top right, rgba(251, 191, 36, 0.14), transparent 24%),
+    linear-gradient(180deg, #f8fafc, #eef2ff);
+  --filter-drawer-bg:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.12), transparent 24%),
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.12), transparent 18%),
+    linear-gradient(180deg, #f8fafc, #eef2ff);
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -11,6 +43,46 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page-text: #e2e8f0;
+  --page-subtle: #94a3b8;
+  --page-bg:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.12), transparent 22%),
+    radial-gradient(circle at right, rgba(251, 191, 36, 0.08), transparent 24%),
+    linear-gradient(180deg, #071118, #0b1220 44%, #071b1a);
+  --surface-glass: rgba(15, 23, 42, 0.72);
+  --surface-strong: rgba(15, 23, 42, 0.92);
+  --surface-soft: rgba(15, 23, 42, 0.84);
+  --surface-border: rgba(148, 163, 184, 0.18);
+  --surface-shadow: 0 22px 48px rgba(2, 6, 23, 0.34);
+  --input-bg: rgba(15, 23, 42, 0.92);
+  --input-border: rgba(100, 116, 139, 0.34);
+  --input-border-strong: rgba(45, 212, 191, 0.44);
+  --accent: #5eead4;
+  --accent-strong: #2dd4bf;
+  --accent-soft: rgba(45, 212, 191, 0.16);
+  --accent-text: #06110f;
+  --hero-text: #f8fafc;
+  --chip-bg: rgba(30, 41, 59, 0.92);
+  --chip-border: rgba(45, 212, 191, 0.2);
+  --chip-text: #ccfbf1;
+  --search-clear-bg: rgba(148, 163, 184, 0.18);
+  --search-clear-text: #e2e8f0;
+  --indicator-bg: rgba(15, 23, 42, 0.82);
+  --indicator-text: #99f6e4;
+  --bulk-bg:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(17, 94, 89, 0.5));
+  --bulk-text: #ccfbf1;
+  --drawer-bg:
+    radial-gradient(circle at top right, rgba(45, 212, 191, 0.12), transparent 24%),
+    linear-gradient(180deg, #0f172a, #111827);
+  --filter-drawer-bg:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.1), transparent 24%),
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.08), transparent 18%),
+    linear-gradient(180deg, #0f172a, #111827);
 }
 
 * {
@@ -25,6 +97,11 @@ body,
 
 body {
   margin: 0;
+  color: var(--page-text);
+  background: var(--page-bg);
+  transition:
+    background 220ms ease,
+    color 220ms ease;
 }
 
 button,

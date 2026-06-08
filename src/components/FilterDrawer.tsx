@@ -32,14 +32,6 @@ const FilterDrawer = ({
   onClear,
   onApply,
 }: Props) => {
-  const activeCount =
-    Number(Boolean(filters.trackName)) +
-    Number(Boolean(filters.artist)) +
-    filters.genres.length +
-    Number(Boolean(filters.minPopularity || filters.maxPopularity)) +
-    Number(Boolean(filters.minTempo || filters.maxTempo)) +
-    Number(Boolean(filters.releaseFrom || filters.releaseTo));
-
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <div className="filter-drawer">
@@ -53,19 +45,6 @@ const FilterDrawer = ({
             <CloseIcon />
           </IconButton>
         </div>
-
-        {/* <div className="filter-summary">
-          <Chip
-            label={`${activeCount} active`}
-            color={activeCount ? "primary" : "default"}
-            variant={activeCount ? "filled" : "outlined"}
-            size="small"
-          />
-          <Typography variant="body2" color="text.secondary">
-            Filters combine with AND logic and stay in sync with search and
-            sort.
-          </Typography>
-        </div> */}
 
         <Divider />
 
