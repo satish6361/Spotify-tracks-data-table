@@ -17,7 +17,7 @@ export const buildRecordParams = (
   overrideLimit?: number,
 ) => {
   const { filters } = query;
-  const params: Record<string, string | number> = {
+  const params: Record<string, string | number | string[]> = {
     _page: query.page,
     _limit: overrideLimit ?? query.pageSize,
     _sort: query.sortField,
@@ -28,7 +28,7 @@ export const buildRecordParams = (
   if (filters.trackName.trim())
     params.track_name_like = filters.trackName.trim();
   if (filters.artist.trim()) params.artist_like = filters.artist.trim();
-  if (filters.genres.length === 1) params.genre = filters.genres[0];
+  if (filters.genres.length) params.genre = filters.genres;
   if (filters.minPopularity) params.popularity_gte = filters.minPopularity;
   if (filters.maxPopularity) params.popularity_lte = filters.maxPopularity;
   if (filters.minTempo) params.tempo_gte = filters.minTempo;
@@ -39,38 +39,49 @@ export const buildRecordParams = (
   return params;
 };
 
-const applyClientSideGenreSet = (rows: TrackRecord[], genres: string[]) => {
-  if (genres.length <= 1) return rows;
-  const genreSet = new Set(genres);
-  return rows.filter((row) => genreSet.has(row.genre));
+export const buildRecordSearchParams = (
+  query: RecordsQuery,
+  overrideLimit?: number,
+) => {
+  const params = buildRecordParams(query, overrideLimit);
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((entry) => searchParams.append(key, entry));
+      return;
+    }
+
+    searchParams.append(key, String(value));
+  });
+
+  return searchParams;
 };
 
 export const fetchRecords = async (
   query: RecordsQuery,
 ): Promise<RecordsResponse> => {
-  const multiGenre = query.filters.genres.length > 1;
   const response = await recordsApi.get<TrackRecord[]>("/records", {
-    params: buildRecordParams(query, multiGenre ? 1000 : undefined),
+    params: buildRecordSearchParams(query),
   });
-  const rows = applyClientSideGenreSet(response.data, query.filters.genres);
   const totalHeader = response.headers["x-total-count"];
 
   return {
-    rows: multiGenre ? rows.slice(0, query.pageSize) : rows,
-    total: multiGenre ? rows.length : Number(totalHeader ?? rows.length),
+    rows: response.data,
+    total: Number(totalHeader ?? response.data.length),
   };
 };
 
 export const fetchAllMatchingRecords = async (query: RecordsQuery) => {
   const firstPage = await fetchRecords({ ...query, page: 1, pageSize: 1 });
   const response = await recordsApi.get<TrackRecord[]>("/records", {
-    params: buildRecordParams(
+    params: buildRecordSearchParams(
       { ...query, page: 1 },
       Math.max(firstPage.total, 1),
     ),
   });
 
-  return applyClientSideGenreSet(response.data, query.filters.genres);
+  return response.data;
 };
 
 export const patchRecord = async (

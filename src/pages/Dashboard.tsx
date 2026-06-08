@@ -222,10 +222,6 @@ const Dashboard = () => {
     Number(Boolean(filters.minPopularity || filters.maxPopularity)) +
     Number(Boolean(filters.minTempo || filters.maxTempo)) +
     Number(Boolean(filters.releaseFrom || filters.releaseTo));
-  const visibleColumns = useMemo(
-    () => columns.filter((column) => column.visible).length,
-    [columns],
-  );
   const viewStart = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const viewEnd = total === 0 ? 0 : Math.min(page * pageSize, total);
 
@@ -373,24 +369,6 @@ const Dashboard = () => {
             Browse a large catalog, tune the visible data, and edit records.
           </p>
         </div>
-
-        {/* <div className="hero-stats">
-          <div className="hero-stat-card">
-            <span className="hero-stat-label">Current view</span>
-            <strong>
-              {viewStart.toLocaleString()}-{viewEnd.toLocaleString()}
-            </strong>
-            <span className="hero-stat-caption">
-              of {total.toLocaleString()} matching tracks
-            </span>
-          </div>
-
-          <div className="hero-stat-card">
-            <span className="hero-stat-label">Visible columns</span>
-            <strong>{visibleColumns}</strong>
-            <span className="hero-stat-caption">saved to local storage</span>
-          </div>
-        </div> */}
       </header>
 
       {error && (

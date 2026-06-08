@@ -1,19 +1,17 @@
-import Drawer from "@mui/material/Drawer";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
+import InputLabel from "@mui/material/InputLabel";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
 import CloseIcon from "@mui/icons-material/Close";
 import type { TrackFilters } from "../types/record";
 import "../styles/FilterDrawer.css";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Checkbox from "@mui/material/Checkbox";
-import ListItemText from "@mui/material/ListItemText";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import { Typography } from "@mui/material";
 
 type Props = {
   open: boolean;
@@ -24,7 +22,7 @@ type Props = {
   onApply: () => void;
 };
 
-const genres = ["pop", "rock", "rap", "hip hop", "edm"];
+const genreOptions = ["edm", "latin", "pop", "r&b", "rap", "rock"];
 
 const FilterDrawer = ({
   open,
@@ -34,196 +32,222 @@ const FilterDrawer = ({
   onClear,
   onApply,
 }: Props) => {
+  const activeCount =
+    Number(Boolean(filters.trackName)) +
+    Number(Boolean(filters.artist)) +
+    filters.genres.length +
+    Number(Boolean(filters.minPopularity || filters.maxPopularity)) +
+    Number(Boolean(filters.minTempo || filters.maxTempo)) +
+    Number(Boolean(filters.releaseFrom || filters.releaseTo));
+
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <div className="filter-drawer">
         <div className="filter-header">
-          <h2>Filters</h2>
+          <div>
+            <h2>Advanced filters</h2>
+            <p>Refine tracks using filters below</p>
+          </div>
 
-          <IconButton onClick={onClose}>
+          <IconButton onClick={onClose} aria-label="Close filters">
             <CloseIcon />
           </IconButton>
         </div>
 
-        <Typography variant="body2" color="text.secondary">
-          Refine tracks using filters below
-        </Typography>
-        <Divider />
-
-        {/* <TextField
-          label="Track Name"
-          size="small"
-          fullWidth
-          value={filters.trackName}
-          onChange={(e) =>
-            onChange({
-              trackName: e.target.value,
-            })
-          }
-        /> */}
-        {/* <div className="filter-group">
-          <label className="filter-group-label">Track Name</label>
-
-          <TextField
-            placeholder="Enter track name"
+        {/* <div className="filter-summary">
+          <Chip
+            label={`${activeCount} active`}
+            color={activeCount ? "primary" : "default"}
+            variant={activeCount ? "filled" : "outlined"}
             size="small"
-            value={filters.trackName}
-            onChange={(e) =>
-              onChange({
-                trackName: e.target.value,
-              })
-            }
           />
+          <Typography variant="body2" color="text.secondary">
+            Filters combine with AND logic and stay in sync with search and
+            sort.
+          </Typography>
         </div> */}
 
-        <TextField
-          label="Artist"
-          size="small"
-          fullWidth
-          value={filters.artist}
-          onChange={(e) =>
-            onChange({
-              artist: e.target.value,
-            })
-          }
-        />
+        <Divider />
 
-        {/* <TextField
-          select
-          label="Genre"
-          size="small"
-          fullWidth
-          value={filters.genres[0] ?? ""}
-          onChange={(e) =>
-            onChange({
-              genres: e.target.value ? [e.target.value] : [],
-            })
-          }
-        >
-          <MenuItem value="">All Genres</MenuItem>
-          <MenuItem value="pop">Pop</MenuItem>
-          <MenuItem value="rock">Rock</MenuItem>
-          <MenuItem value="rap">Rap</MenuItem>
-          <MenuItem value="edm">EDM</MenuItem>
-        </TextField> */}
+        <div className="filter-scroll">
+          <div className="filter-section">
+            <label className="filter-section-title">Text filters</label>
 
-        <FormControl fullWidth size="small">
-          <InputLabel>Genres</InputLabel>
-
-          <Select
-            multiple
-            value={filters.genres}
-            onChange={(event) =>
-              onChange({
-                genres:
-                  typeof event.target.value === "string"
-                    ? event.target.value.split(",")
-                    : event.target.value,
-              })
-            }
-            input={<OutlinedInput label="Genres" />}
-            renderValue={(selected) => selected.join(", ")}
-          >
-            {genres.map((genre) => (
-              <MenuItem key={genre} value={genre}>
-                <Checkbox checked={filters.genres.includes(genre)} />
-
-                <ListItemText primary={genre} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <div className="filter-section">
-          <label>Popularity</label>
-
-          <div className="range-row">
             <TextField
-              label="Min"
-              type="number"
+              label="Track name"
               size="small"
-              value={filters.minPopularity}
-              onChange={(e) =>
+              fullWidth
+              value={filters.trackName}
+              onChange={(event) =>
                 onChange({
-                  minPopularity: e.target.value,
+                  trackName: event.target.value,
                 })
               }
             />
 
             <TextField
-              label="Max"
-              type="number"
+              label="Artist"
               size="small"
-              value={filters.maxPopularity}
-              onChange={(e) =>
+              fullWidth
+              value={filters.artist}
+              onChange={(event) =>
                 onChange({
-                  maxPopularity: e.target.value,
+                  artist: event.target.value,
                 })
               }
             />
           </div>
-        </div>
 
-        <div className="range-row">
-          <TextField
-            label="Min Tempo"
-            size="small"
-            value={filters.minTempo}
-            onChange={(e) =>
-              onChange({
-                minTempo: e.target.value,
-              })
-            }
-          />
+          <div className="filter-section">
+            <label className="filter-section-title">Genre</label>
 
-          <TextField
-            label="Max Tempo"
-            size="small"
-            value={filters.maxTempo}
-            onChange={(e) =>
-              onChange({
-                maxTempo: e.target.value,
-              })
-            }
-          />
-        </div>
+            <FormControl fullWidth size="small">
+              <InputLabel>Genres</InputLabel>
 
-        <div className="filter-section">
-          <label>Release Date</label>
+              <Select
+                multiple
+                value={filters.genres}
+                onChange={(event) =>
+                  onChange({
+                    genres:
+                      typeof event.target.value === "string"
+                        ? event.target.value.split(",")
+                        : event.target.value,
+                  })
+                }
+                input={<OutlinedInput label="Genres" />}
+                renderValue={(selected) => selected.join(", ")}
+              >
+                {genreOptions.map((genre) => (
+                  <MenuItem key={genre} value={genre}>
+                    <Checkbox checked={filters.genres.includes(genre)} />
+                    <ListItemText primary={genre.toUpperCase()} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
 
-          <div className="range-row">
-            <TextField
-              type="date"
-              size="small"
-              value={filters.releaseFrom}
-              onChange={(e) =>
-                onChange({
-                  releaseFrom: e.target.value,
-                })
-              }
-            />
+          <div className="filter-section">
+            <label className="filter-section-title">Popularity range</label>
+            <div className="range-row">
+              <TextField
+                label="Min"
+                type="number"
+                size="small"
+                value={filters.minPopularity}
+                onChange={(event) =>
+                  onChange({
+                    minPopularity: event.target.value,
+                  })
+                }
+                slotProps={{
+                  htmlInput: {
+                    min: 0,
+                    max: 100,
+                  },
+                }}
+              />
 
-            <TextField
-              type="date"
-              size="small"
-              value={filters.releaseTo}
-              onChange={(e) =>
-                onChange({
-                  releaseTo: e.target.value,
-                })
-              }
-            />
+              <TextField
+                label="Max"
+                type="number"
+                size="small"
+                value={filters.maxPopularity}
+                onChange={(event) =>
+                  onChange({
+                    maxPopularity: event.target.value,
+                  })
+                }
+                slotProps={{
+                  htmlInput: {
+                    min: 0,
+                    max: 100,
+                  },
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="filter-section">
+            <label className="filter-section-title">Tempo range</label>
+            <div className="range-row">
+              <TextField
+                label="Min BPM"
+                type="number"
+                size="small"
+                value={filters.minTempo}
+                onChange={(event) =>
+                  onChange({
+                    minTempo: event.target.value,
+                  })
+                }
+              />
+
+              <TextField
+                label="Max BPM"
+                type="number"
+                size="small"
+                value={filters.maxTempo}
+                onChange={(event) =>
+                  onChange({
+                    maxTempo: event.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+
+          <div className="filter-section">
+            <label className="filter-section-title">Release date</label>
+            <div className="range-row">
+              <TextField
+                label="From"
+                type="date"
+                size="small"
+                value={filters.releaseFrom}
+                onChange={(event) =>
+                  onChange({
+                    releaseFrom: event.target.value,
+                  })
+                }
+                slotProps={{
+                  inputLabel: { shrink: true },
+                }}
+              />
+
+              <TextField
+                label="To"
+                type="date"
+                size="small"
+                value={filters.releaseTo}
+                onChange={(event) =>
+                  onChange({
+                    releaseTo: event.target.value,
+                  })
+                }
+                slotProps={{
+                  inputLabel: { shrink: true },
+                }}
+              />
+            </div>
           </div>
         </div>
 
         <div className="drawer-footer">
-          <Button variant="outlined" onClick={onClear}>
-            Clear All
-          </Button>
+          <button
+            onClick={onClear}
+            className="filter-footer-btn filter-footer-btn-secondary"
+          >
+            Clear all
+          </button>
 
-          <Button variant="contained" onClick={onApply}>
-            Apply Filters
-          </Button>
+          <button
+            onClick={onApply}
+            className="filter-footer-btn filter-footer-btn-primary"
+          >
+            Apply filters
+          </button>
         </div>
       </div>
     </Drawer>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildRecordParams } from "./recordsApi";
+import { buildRecordParams, buildRecordSearchParams } from "./recordsApi";
 import type { RecordsQuery } from "../types/record";
 
 const baseQuery: RecordsQuery = {
@@ -31,6 +31,7 @@ describe("buildRecordParams", () => {
       q: "swift",
       track_name_like: "love",
       artist_like: "tay",
+      genre: ["pop", "rock"],
       popularity_gte: "60",
       popularity_lte: "90",
       tempo_gte: "100",
@@ -50,7 +51,15 @@ describe("buildRecordParams", () => {
         },
       }),
     ).toMatchObject({
-      genre: "pop",
+      genre: ["pop"],
     });
+  });
+
+  it("serializes repeated genre params for multi-select filtering", () => {
+    const params = buildRecordSearchParams(baseQuery);
+
+    expect(params.getAll("genre")).toEqual(["pop", "rock"]);
+    expect(params.get("artist_like")).toBe("tay");
+    expect(params.get("track_name_like")).toBe("love");
   });
 });
