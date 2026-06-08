@@ -414,7 +414,6 @@ const Dashboard = () => {
       {error && (
         <div className="state-panel" role="alert">
           <strong>Could not load records.</strong>
-          <span>Start json-server and check VITE_API_BASE_URL.</span>
           <button type="button" onClick={() => void refetch()}>
             Retry
           </button>
